@@ -265,3 +265,113 @@ def fact_iter(num, product):
 
 >高级特性
 
+
+
+>切片
+
+`L[0:3]` 取前三个元素 0 1 2
+
+`L[:3]` 如果从第0个元素开始，可省略0
+
+`L[-2:-1]` 最后一个元素为-1 
+
+`L[0:10:3]` 每三个取一个 0  3 6 9
+
+`print("today is fine"[::2])`  字符串也可以取
+
+>迭代
+
+字典默认迭代key  ， 如果要迭代value `dic.values()` ,  如果要迭代key , values `dic.items()`
+
+~~~python
+from collections import Iterable
+isinstance (dic,Iterable)                 ##判断对象是否可迭代
+~~~
+
+`for i , v in enumerate(list)` 实现下标迭代 0 ，"ccyy" 
+
+ >列表生成式
+
+`list = [ x * x for x in range(1,11)]`      生成1*1类型list
+
+`list = [x*x for x in range(1,11) if x%2 == 0]`  列表生成并加上if语句  if后不能加else，if只是一个过滤条件
+
+`list = [m+n for m in "abc" for n in "def"]`  两层循环生成
+
+`os.listdir()`   os模块列出文件和目录
+
+>生成器
+
+一次性生成列表会占用大量内存，可以在循环过程中不断推算后续元素。这样动态生成称为生成器
+
+`list = [x*x for x in range(1,100)]` 生成式方式
+
+`g = (x*x for x in range(1,100))`  生成器方式    `next(g)` 打印g的下一个元素
+
+~~~python
+g = (x*x for x in range(1,111111))
+for i in g:
+    print(i)                           ##生成器方式生成的遍历
+~~~
+
+~~~python
+#斐波拉契数列  1 1 2 3 5 8 13
+def fib(max):
+    n , a , b = 0 , 0 ,1
+    while n < max:
+        print(b)
+        a , b = b , a+b
+        n=n+1
+    return 'completed'
+print(fib(10))                          ##循环方式生成数列
+~~~
+
+`print(b)  改为 yield(b) `   普通函数改为生成器
+
+~~~python
+def fib(max):
+    n , a , b = 0 , 0 ,1
+    while n < max:
+        yield b
+        a , b = b , a+b
+        n=n+1
+    return 'completed'
+for i in fib(10):
+    print(i)                                ##生成器方式生成fib数列
+~~~
+
+生成器是在yield时中断。继续执行下面，最终函数变为生成器。for in 方式打印生成器内容
+
+即实际生成了一个gen对象
+
+>迭代器
+
+可以用for循环的对象称为 可迭代对象 Iterable
+
+~~~python
+from collections.abc import Iterable
+print(isinstance(fib,Iterable))                 ##判断是否为可迭代对象
+~~~
+
+可以被next()函数调用的称为迭代器
+
+~~~python
+from collections.abc import Iterator
+print(isinstance(fib,Iterator))                  ##判断是否为迭代器
+~~~
+
+迭代器是惰性的，只有调用它，他才会计算。。 所以可以表示无限大
+
+
+
+>函数式编程
+
+纯粹的函数式编程没有变量，输入确定，输出一定确定。。。 称为无副作用
+
+特点：允许把函数作为参数传入另一个函数，还允许返回函数
+
+>高阶函数
+
+`f = abs   f(-10)` 函数赋给变量
+
+函数接收另一个函数作为参数称为`高阶变量`

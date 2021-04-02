@@ -19,7 +19,7 @@ import os
 #     print(name)
 # for i in range(100):
 #     print(i)
-# sum = 0 
+# sum = 0
 # n = 99
 # while n > 0 :
 #     sum = sum + n
@@ -56,7 +56,7 @@ import os
 #     while n > 0 :
 #         s=s*x
 #         n=n-1
-#     return s 
+#     return s
 # print(power(5))
 
 # def calc (*nums) :
@@ -112,7 +112,7 @@ import os
 # a = isinstance(dic,Iterable)
 # print(a)
 # for i , v in enumerate(dic):
-    # print(i,v)
+# print(i,v)
 
 # list = ["caiyi","ccyy"]
 # for i , v in enumerate(list):
@@ -137,7 +137,7 @@ import os
 # for i in g:
 #     print(i)
 
-#斐波拉契数列  1 1 2 3 5 8 13
+# 斐波拉契数列  1 1 2 3 5 8 13
 # def fib(max):
 #     n , a , b = 0 , 0 ,1
 #     while n < max:
@@ -153,11 +153,54 @@ import os
 # from collections.abc import Iterator
 # print(isinstance(fib,Iterator))
 
-def all(x):
-    n=0
-    while n < x:
+# def all(x):
+#     n=0
+#     while n < x:
+#         yield n
+#         n = n +1
+#     return "completed"
+# for i in all(1000000000000000000):
+#     print(i)
+
+
+# def f(x):
+#     return x*x
+# r = map (f,[1,2,3,4])
+# for i in r:
+#     print(i)
+
+# from functools import reduce
+# def add(x,y):
+#     return x+y
+# r = reduce(add,[1,2,3,4,5])
+# print(r)
+
+# from functools import reduce
+# def fn(x,y):
+#     return x*10+y
+# s = reduce(fn,[1,2,3,4,5])
+# print(s)
+
+# def is_odd(n):
+#     return n % 2 == 0
+# print(list(filter(is_odd,[1,2,3,4,5])))
+
+
+def odd_iter():
+    n=1
+    while True:
+        n = n+2
         yield n
-        n = n +1
-    return "completed"
-for i in all(1000000000000000000):
-    print(i)
+# odd_iter是一个生成器
+def not_divisible(n):
+    return lambda x: x%n > 0
+def primes():
+    yield 2
+    it = odd_iter()
+    while True:
+        n = next(it)
+        yield n 
+        it = filter(not_divisible,it)
+for i in primes():
+    if i < 100:
+        print(i)

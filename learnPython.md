@@ -375,3 +375,62 @@ print(isinstance(fib,Iterator))                  ##判断是否为迭代器
 `f = abs   f(-10)` 函数赋给变量
 
 函数接收另一个函数作为参数称为`高阶变量`
+
+>map 依次作用生成list    reduce  依次作用累积
+
+`r = map(f,[1,2,3,4])`  map()函数，依次作用到list的每个元素。。接收两个参数，一个函数，一个iterable   生成的是一个Iterator
+
+`list(r)`    将r转换为list， 是一个Iterable
+
+~~~python
+from functools import reduce
+def add(x,y):
+    return x+y
+r = reduce(add,[1,2,3,4,5])
+print(r)                          ##reduce使用方法，需要import
+~~~
+
+`reduce(f,[1,2,3,4])` reduce()函数将结果作用到下一个元素，最终累积。。。传入两个参数，一个函数，一个iterable。
+
+>filter()过滤序列
+
+~~~python
+def is_odd(n):
+    return n % 2 == 0
+print(list(filter(is_odd,[1,2,3,4,5])))
+~~~
+
+`filter()`对list依次作用，true则保留，flase则遗弃。。接收两个参数，一个函数，一个list
+
+~~~python
+def odd_iter():
+    n=1
+    while True:
+        n = n+2
+        yield n
+# odd_iter是一个生成器
+def not_divisible(n):
+    return lambda x: x%n > 0
+def primes():
+    yield 2
+    it = odd_iter()
+    while True:
+        n = next(it)
+        yield n 
+        it = filter(not_divisible,it)
+for i in primes():
+    if i < 100:
+        print(i)                          ## 生成100以内的素数
+~~~
+
+>排序函数
+
+`sortd([1,2,3,4,5],key=abs，reverse=false)`  无key则默认按大小排序，按key排序,revers排序颠倒
+
+>返回函数
+
+把函数作为结果值返回
+
+
+
+ 

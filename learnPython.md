@@ -431,6 +431,364 @@ for i in primes():
 
 把函数作为结果值返回
 
+~~~python
+def lazy_sum(*args):
+    def sum():
+        ex = 0
+        for i in args:
+            ex = ex + i
+        return ex
+    return sum
+f = lazy_sum(1,2,3,4,5)
+print(f)
+print(f())
+~~~
+
+ f输出的是一个函数 f()调用才能真正计算
+
+sum()使用外部函数的参数。返回sum，参数和变量都保存在sum函数中。这种称为`闭包`
+
+ 每次调用这个闭包函数时返回的函数不同
+
+~~~python
+def count():
+    fs = []
+    for i in range(1, 4):
+        def f():
+             return i*i
+        fs.append(f)
+    return fs
+
+f1, f2, f3 = count()                         ##f1() f2() f3()   =  9 9 9 
+~~~
+
+`f1()`并不是立即执行，而是等所有调用函数完成后再执行 ，所以9 9 9   。。 所以使用`闭包`时不要用任何循环
+
+如果一定要引用循环变量怎么办？方法是再创建一个函数，用该函数的参数绑定循环变量当前的值，无论该循环变量后续如何更改，已绑定到函数参数的值不变：
+
+~~~python
+def count():
+    def f(j):
+        def g():
+            return j*j
+        return g
+    fs = []
+    for i in range(1,4):
+        fs.append(f(i))
+    return fs
+for i in count():
+    print (i())         ##保存到函数中，函数参数不会变。注意：这个list中都是函数
+~~~
+
+>匿名函数 lambda
+
+`lambda x : x*x`  不需要return
+
+>装饰器
+
+代码运行期间动态增减功能的方式，称为`装饰器`  。 不需要改动函数本身
+
+~~~python
+def log(func):
+    def wrappar(*args , **kw):
+        print("call %s():" % func.__name__)
+        return func(*args,**kw)
+    return wrappar
+@log
+def now():
+    print("打印一行")
+print(now())
+~~~
+
+`@log` 相当于 log(now) 
+
+~~~python
+def log(text):
+    def decorator(func):
+        def wrapper(*args,**kw):
+            print("%s %s:" % (text,func.__name__))
+            return func(*args,**kw)
+        return wrapper
+    return decorator
+@log("execute")
+def now():
+    print("2021/04/02")
+now()                                   ##decorator本身带参数
+~~~
+
+`@log("exectue")`  相当于`now = log('execute')(now)`
+
+~~~python
+import functools
+
+def log(text):
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kw):
+            print('%s %s():' % (text, func.__name__))
+            return func(*args, **kw)
+        return wrapper
+    return decorator                   ##一个完整带参数decorator写法
+~~~
+
+>偏函数
+
+定义默认参数函数。偏函数可以简化
+
+~~~python
+import functools
+
+int2 = functools.partial(int , base=2)
+print(int2('1111111'))
+~~~
+
+实际上是把后边参数加到左边
 
 
- 
+
+>模块。 将函数封装到文件 。。。 一个个.py文件都是一个模块
+
+每个模块的函数名和变量名都可以相同，不冲突
+
+模块名有可能相同，引入`包` 来组织模块
+
+目录下有`__init__.py`  则是一个包
+
+>使用模块
+
+模块的标准开头写法
+
+~~~python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+' a test module '               ##文档注释
+
+__author__ = 'Michael Liao'     ##作者留名
+~~~
+
+`_name__`  特殊变量
+
+`_private` 定义私有变量或私有函数
+
+>安装第三方模块
+
+Anaconda
+
+
+
+>面向对象编程 OOP
+
+面向对象在程序设计中更抽象
+
+>类和实例
+
+`class Students(object)` 定义类  object类是所有类的父类
+
+`__init_(self,name,score) `  类的特殊方法,将属性绑定
+
+>访问限制
+
+数据封装：在类的内部定义访问数据的函数（即类的方法）
+
+`self.__name = name`  将属性编程私有变量。 前面加双下划线
+
+类中方法第一个参数都是self
+
+>继承 
+
+`class Dog(Animal)`
+
+>多态
+
+python作为动态语言的，具有鸭子类型的特性。 即不必严格继承，只需有相应的方法即可
+
+>获取对象信息
+
+`type(1)` 判断类型
+
+`isinstance(h,dog)`  判断类的类型
+
+`isinstance(1,int)` 判断数据类型
+
+isinstance判断类型更全面
+
+`dir("Students")`  输出类的所有属性和方法
+
+~~~python
+    def __len__(self):
+        return 100
+    caiyi = Students("caiyi",100)
+    print(len(caiyi))       ##需要自己写一个len()方法，并实例化
+~~~
+
+>实例属性和类属性
+
+`class Students(object):`
+
+​			`name = "student"`
+
+给类本身绑定属性，实例都能访问。但实例绑定相同，优先级更高
+
+
+
+
+
+>面向对象高级编程
+
+类绑定的方法，实例都能使用
+
+>`__slots__` 约束类属性
+
+`__slots_=("name","score")` 限制当前类的实例只能绑定相关属性>>只作用在本类，对子类不起作用
+
+一般创建两个get set方法，实现对数据检查和封装。对外不可见。但比较繁琐
+
+`@property`  装饰器可以让get set方法向属性访问一样简单
+
+~~~python
+class Students(object):
+
+    @property
+    def score(self):
+        return self.__score
+    
+    @score.setter
+    def score(self,value):
+        self.__score = value
+s=Students()
+s.score = 60
+print(s.score)
+~~~
+
+>多重继承
+
+`class Dog(Animal , Runnable)`
+
+这种多重继承的称为Mixln 混合类
+
+>定制类
+
+如 `__init_`  `__slots__` 均属于
+
+`__str__(self)`  打印类其实是调用的此方法
+
+`__iter__(self):          return slef`   迭代类本身
+
+`__next__(self): `        `__next__(self)`方法拿到下一个值
+
+~~~python
+
+class Fib(object):
+    def __init__(self):
+        self.a = 0
+        self.b = 1
+    def __iter__(self):
+        return self
+    def __next__(slef):
+        slef.a , slef.b = slef.b , slef.a+slef.b
+        if slef.a > 1000:
+            raise StopIteration()
+        return slef.a
+for i in Fib():
+    print(i)                     ##类使用__iter__方法实现fib数列
+~~~
+
+`__getitem_()`将类表现为list，再将类实例化后，可以用下标访问
+
+~~~python
+class Fib(object):
+    def __getitem__(slef,n):
+        a , b = 1 , 1
+        for i in range(n):
+            a , b = b , a+b
+        return a
+f = Fib()
+print(f[10])
+~~~
+
+`__getattr__(slef,attr)`  当调用的类属性`不存在时`会报错，此时会`自动`调用此方法寻找attr
+
+~~~python
+class Students(object):
+    def __init__(self):
+        self.name = "caiyi"
+        self.age = 100
+    def __getattr__(self,attr):
+        if attr == "score":
+            return 100
+s =Students()
+print(s.score)
+~~~
+
+`__call_(self)             caiyi()`    实例自身调用
+
+>枚举类 enum
+
+~~~python
+from enum import Enum
+
+Month = Enum("Month",("Jan","Feb","Mar","Apr","May","Jun"))
+for name, member in Month.__members__.items():
+    print(name, '=>', member, ',', member.value)
+~~~
+
+生成了Month 类型的枚举类
+
+或者继承Enum类实现
+
+~~~python
+from enum import Enum , unique
+
+@unique
+class Weekday (Enum):
+    Sun = 0
+    Mon = 1
+print(Weekday.Sun.value)
+~~~
+
+>元类
+
+type() 既能返回i对象类型，有可以动态创建
+
+`metaclass` 动态创建类的同时，可以控制类的创建行为
+
+高深
+
+
+
+>错误、调试和测试
+
+>错误
+
+`try    except  finally`   try如果有错则不会执行try内语句，依次执行except finally(一定会执行)
+
+错误也是类。所有错误都继承自`BaseException`，except捕获错误是会把捕获类的子类都一网打尽
+
+`logging.execption(e)` 模块可以记录错误
+
+`raise TypeError()`  抛出错误
+
+还可以捕获到一个错误后抛出另一种类型的错误(要相关)
+
+>调试
+
+`print()`  简单粗暴，用后需要删除
+
+`assert n != 0` 断言，如果n=0 后面程序不能运行，并抛出错误AssertionErrorr  `python -o test.py` 忽略断言
+
+`logging`  允许记录信息级别
+
+~~~python
+import logging
+logging.basicConfig(level=logging.INFO)
+
+n = int(0)
+logging.info("n= %d" % n)
+print(10/n)
+~~~
+
+`python -m pdb test.py`  pdb调试，单步执行  n下一步   p i 查看变量 q退出调试
+
+
+

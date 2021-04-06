@@ -790,5 +790,143 @@ print(10/n)
 
 `python -m pdb test.py`  pdb调试，单步执行  n下一步   p i 查看变量 q退出调试
 
+>单元测试
+
+>文档测试
 
 
+
+>I/O编程
+
+同步I/O     异步I/O  是否等待
+
+`with open(" " , "r") as f:        print(f.read())`    一次读出
+
+`f = open(" ","rb")`        读取二进制文件
+
+`f = open(" ","r",encoding = "gbk" ， errors = "ignore") `  读取特定编码，有错误时忽略
+
+` with open(" " , "w") as f :   f.write(" ") `  写文件
+
+w 有重复文件时会直接覆盖，  a 追加到文件末尾
+
+>StringIO  和 BytesIO
+
+在内存中读写字符串和byte
+
+`from io import StringIO` 使用前需要导入这个包
+
+`StringIO ` 只能操作str
+
+`f =  StringIO("hello world")       f.readline()`
+
+`BytesIO`  可以操作不同进制
+
+~~~python
+from io import BytesIO
+f = BytesIO()
+f.write("中文".encode("utf-8"))
+print(f.getvalue())
+~~~
+
+>操作文件和目录
+
+`import os`
+
+`os.name` 查看操作系统类型
+
+`os.uname()` 查看操作系统详细信息，win下没有
+
+`os.environ`  查看系统环境变量
+
+`os.environ.get("PATH")` 查看某个环境变量的值
+
+操作文件和目录的函数一部分放在os中， 一部分放在os.path中
+
+`print(os.path.abspath("."))`  查看当前文件的绝对路径
+
+`os.path.join('/Users/michael', 'testdir')`   某个目录下创建新目录
+
+`os.mkdir('/Users/michael/testdir')`  创建新目录
+
+`os.rmdir('/Users/michael/testdir')`  删除目录
+
+`os.path.split('/Users/michael/testdir/file.txt')`  拆分路径
+
+`os.path.splitext()`  得到文件扩展名
+
+shutil 模块提供os模块没有的功能，可以看作时补充
+
+~~~python
+import shutil
+
+shutil.copyfile
+~~~
+
+ >序列化
+
+将存储在内存的数据变为可传输或可存储 picking 其他语言叫seriallization
+
+反序列化 unpicking
+
+`pickle.dumps(d)` 对象序列化
+
+`pickle.dump(d,f)` 对象序列化后写入文件
+
+ `d = pickle.load(f)`  读序列化内容
+
+> JSON
+
+`import json`
+
+`json.dumps(d)`  序列化 将dict类型转为json类型
+
+`json.loads(json_str)` 反序列化 将str转为file_link_object
+
+class 不能直接被json序列化，需要定义一个转换函数
+
+~~~python
+import json
+
+class Student(object):
+    def __init__(self, name, age, score):
+        self.name = name
+        self.age = age
+        self.score = score
+def student2dict(std):
+    return {
+        'name': std.name,
+        'age': std.age,
+        'score': std.score
+        }
+s = Student('Bob', 20, 88)
+print(json.dumps(s, default=student2dict))
+~~~
+
+`Student`实例首先被`student2dict()`函数转换成`dict`，然后再被序列化为JSON：
+
+`print(json.dumps(s, default=lambda obj: obj.__dict__))` 
+
+也可以使用此方法直接转换。因为通常`class`的实例都有一个`__dict__`属性，它就是一个`dict`，用来存储实例变量。也有少数例外，比如定义了`__slots__`的class。
+
+反序列化为一个class
+
+~~~python
+import json
+
+class Student(object):
+    def __init__(self, name, age, score):
+        self.name = name
+        self.age = age
+        self.score = score
+def dict2student(d):
+    return Student(d['name'], d['age'], d['score'])
+json_str = '{"age": 20, "score": 88, "name": "Bob"}'
+print(json.loads(json_str, object_hook=dict2student))
+~~~
+
+
+
+
+
+>进程和线程

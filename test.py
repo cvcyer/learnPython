@@ -446,6 +446,56 @@ import os
 # import logging
 # logging.basicConfig(level=logging.INFO)
 
-n = int(0)
-logging.info("n= %d" % n)
-print(10/n)
+# n = int(0)
+# logging.info("n= %d" % n)
+# print(10/n)
+
+# from io import StringIO
+# f = StringIO()
+# f.write("hello")
+# print(f.getvalue())
+
+# from io import StringIO
+# f = StringIO("Hello world")
+# print(f.getvalue())
+# while True:
+#     s = f.readline()
+#     if s == "":
+#         break
+#     print(s)
+
+# from io import BytesIO
+# f = BytesIO()
+# f.write("中文".encode("utf-8"))
+# print(f.getvalue())
+
+
+# import os
+# import os.path
+# print(os.environ.get("PATH"))
+# print(os.path.abspath("."))
+# os.path.join("")
+
+# import shutil
+# shutil.copyfile
+
+# import pickle
+# d = {"name":"caiyi","age":20 , "score" :100}
+# s = pickle.dumps(d)
+# print(s)
+
+# import json
+# d = dict(name="caiyi",age=10,score=100)
+# print(json.dumps(d))
+
+import json
+
+class Student(object):
+    def __init__(self, name, age, score):
+        self.name = name
+        self.age = age
+        self.score = score
+def dict2student(d):
+    return Student(d['name'], d['age'], d['score'])
+json_str = '{"age": 20, "score": 88, "name": "Bob"}'
+print(json.loads(json_str, object_hook=dict2student))

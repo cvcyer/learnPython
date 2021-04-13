@@ -930,3 +930,315 @@ print(json.loads(json_str, object_hook=dict2student))
 
 
 >进程和线程
+
+
+
+
+
+
+
+>正则表达式
+
+`\d`  匹配一个数字
+
+`\w` 匹配一个字母或数字
+
+`.` 匹配任意1个字符
+
+` * `  匹配任意个任意字符
+
+`+` 匹配至少一个字符
+
+`?` 匹配0个或一个字符
+
+`{n}` 匹配n个字符
+
+`{n,m}` 匹配n-m个字符
+
+`\` 匹配特殊字符转义
+
+exm: `\d{3}\s+\d{3,8}}`  匹配三个数字，0个或一个空格或tab，匹配3到8个数字 123 12345
+
+exm: 匹配010-12345  `\d{3}\-\d{3,8}`
+
+`[ ]` 表示范围
+
+​	`[0-9a-zA-Z\_]` 匹配一个数字 字母 或下划线
+
+​	`[0-9a-zA-Z\_]+` 匹配至少一个数字，母或下划线组成的字符串
+
+`A|B` 匹配A或B
+
+`^` 行开头  `^\d` 必须以数字开头
+
+`$` 行结尾 `\d$` 必须以数字结尾
+
+
+
+`import re`  py中正则表达式模块
+
+`r'abc'` 对字符串不专一
+
+`re.match("正则",字符串)` 判断是否匹配，匹配成功返回一个对象，不成功返回none
+
+```
+>>> re.split(r'[\s\,\;]+', 'a,b;; c  d')
+['a', 'b', 'c', 'd']
+```
+
+```
+>>> m = re.match(r'^(\d{3})-(\d{3,8})$', '010-12345')
+>>> m.group(0)
+'010-12345'
+>>> m.group(1)
+'010'
+>>> m.group(2)
+'12345'
+```
+
+`()` 提取保存组
+
+`group(0)` 原字符串
+
+`groups()` 列出匹配出的组
+
+正则默认贪婪匹配
+
+`?` 使用非贪婪匹配
+
+```
+>>> re.match(r'^(\d+?)(0*)$', '102300').groups()
+('1023', '00')
+```
+
+预编译正则表达式
+
+```
+>>> import re
+# 编译:
+>>> re_telephone = re.compile(r'^(\d{3})-(\d{3,8})$')
+# 使用：
+>>> re_telephone.match('010-12345').groups()
+('010', '12345')
+>>> re_telephone.match('010-8086').groups()
+('010', '8086')
+```
+
+
+
+>常用内置模块
+
+>datetime  时间模块
+
+`from datetime import datetime`
+
+`datetime.now()` 获取当前时间
+
+`datetime(2021,4,9,10,19)` 指定时间
+
+`dt.timestamp()` 转换为时间戳
+
+`datetime.formtimestamp(t)` 将t时间戳转换为时间
+
+`cday = datetime.strptime('2015-6-1 18:19:59', '%Y-%m-%d %H:%M:%S') `        格式化字符串为时间
+
+`print(now.strftime('%a, %b %d %H:%M'))`   格式化字符时间格式
+
+`from datetime import datetime, timedelta`  对时间进行加减
+
+```
+>>> now + timedelta(days=2, hours=12)
+datetime.datetime(2015, 5, 21, 4, 57, 3, 540997)
+```
+
+本地时间转换为UTC时间
+
+时区转换
+
+>collections  内建集合模块
+
+namedtuple 不变集合
+
+~~~python
+from collections import namedtuple
+Point = namedtuple("Point",["x","y"])
+p=Point(1,2)
+print(p.x)
+print(p.y)                    ##表示二维坐标
+~~~
+
+deque 解决list插入不方便
+
+```
+>>> from collections import deque
+>>> q = deque(['a', 'b', 'c'])
+>>> q.append('x')
+>>> q.appendleft('y')
+```
+
+`appendleft()`和`popleft()`
+
+defaultdict  引用key不存在返回默认值
+
+```python
+from collections import defaultdict
+dd = defaultdict(lambda: 'N/A')
+ dd['key2'] # key2不存在，返回默认值
+```
+
+OrderedDict 使dict有序
+
+```
+>>> from collections import OrderedDict
+>>> d = dict([('a', 1), ('b', 2), ('c', 3)])
+>>> d # dict的Key是无序的
+{'a': 1, 'c': 3, 'b': 2}
+>>> od = OrderedDict([('a', 1), ('b', 2), ('c', 3)])
+>>> od # OrderedDict的Key是有序的
+OrderedDict([('a', 1), ('b', 2), ('c', 3)])
+```
+
+key是按照插入的顺序排列
+
+`OrderedDict`可以实现一个FIFO（先进先出）的dict，当容量超出限制时，先删除最早添加的Key：
+
+ChinaMap  将多个dict串起来
+
+```python
+from collections import ChainMap
+combined = ChainMap(command_line_args, os.environ, defaults)
+```
+
+Counter 计数器，统计字符在字符中出现次数
+
+```python
+>>> from collections import Counter
+>>> c = Counter()
+>>> for ch in 'programming':
+...     c[ch] = c[ch] + 1
+...
+```
+
+>base64  二进制转换为字符
+
+`import base64`
+
+` base64.b64encode(b'i\xb7\x1d\xfb\xef\xff')      b'abcd++//'`             
+
+```python
+>>> base64.urlsafe_b64encode(b'i\xb7\x1d\xfb\xef\xff')
+b'abcd--__'
+>>> base64.urlsafe_b64decode('abcd--__')
+b'i\xb7\x1d\xfb\xef\xff'                     
+```
+
+urlsafe_b64会把 +  / 变为   -  _     上面为urlsafe的编解码
+
+Base64编码后会自动把`=`忽略
+
+>struct  bytes与二进制数据类型转换
+
+~~~python
+import struct
+s =struct.pack(">I",2111)
+~~~
+
+`>I` >表示字节顺序 big-endian 网络序   I 表示4字节无符号整数
+
+`>IH` I 4 字节无符号整数， H 2字节无符号整数
+
+bmp位图
+
+```
+>>> struct.unpack('<ccIIIIIIHH', s)
+(b'B', b'M', 691256, 0, 54, 40, 640, 360, 1, 24)
+```
+
+`b'B'`、`b'M'`说明是Windows位图，位图大小为640x360，颜色数为24。
+
+两个字节：`'BM'`表示Windows位图，`'BA'`表示OS/2位图； 一个4字节整数：表示位图大小； 一个4字节整数：保留位，始终为0； 一个4字节整数：实际图像的偏移量； 一个4字节整数：Header的字节数； 一个4字节整数：图像宽度； 一个4字节整数：图像高度； 一个2字节整数：始终为1； 一个2字节整数：颜色数。
+
+>hashlib  提供常见摘要算法（哈希，散列）
+
+~~~python
+import hashlib
+
+md5 = hashlib.md5()
+md5.update('caiyi666'.encode("utf-8"))
+print(md5.hexdigest())
+~~~
+
+md5 任意字符串转换为32位(128bit)
+
+```python
+import hashlib
+
+sha1 = hashlib.sha1()
+sha1.update('how to use sha1 in '.encode('utf-8'))
+sha1.update('python hashlib?'.encode('utf-8'))
+print(sha1.hexdigest())
+```
+
+sha1  160bit
+
+常见密码可以加slat来使其得到不同md5
+
+
+
+>hmac     通过一个标准算法，将key混入其中
+
+```
+>>> import hmac
+>>> message = b'Hello, world!'
+>>> key = b'secret'
+>>> h = hmac.new(key, message, digestmod='MD5')
+>>> h.hexdigest()
+'fa4ee7d173f2d97ee79022d1a7355bcf'
+```
+
+>itertools  用于操作迭代对象
+
+```
+>>> import itertools
+>>> natuals = itertools.count(1)
+>>> for n in natuals:
+...     print(n)
+```
+
+`count(1)`从1开始无限循环
+
+`cycle("abc")`  无限循环输出abc
+
+`repeat("a",3)`  输出3次a
+
+`ns = itertools.takewhile(lambda x: x <= 10, natuals)`    takewhile()  给定结束条件
+
+>contextlib    `open with` 其实是实现了上下文管理
+
+~~~python
+from contextlib import contextmanager
+
+@contextmanager
+def tag():
+with tag()    
+ 
+~~~
+
+contextlib 可以实现我们某段代码前自动执行某段代码
+
+>closing    一个对象未实现上下文，可以用closing()将这个对象变为上下文对象
+
+~~~python
+from contextlib import closing
+from urllib.request import urlopen
+
+with closing(urlopen('https://www.baidu.com')) as page:
+    for line in page:
+        print(line)
+~~~
+
+
+
+>urllib  对URL进行操作
+
+>Get   requetst模块发送Get请求到页面，返回http响应

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding : utf-8 -*-
-import os
+# import os
 # print("hello %s , you have %d money" % ('才艺',10000000))
 # print("hello {0} , you tall is {1:.1f} m" .format('才艺',1.88))
 # list = ["caiyi" , "caier" ,"caisan"]
@@ -488,14 +488,108 @@ import os
 # d = dict(name="caiyi",age=10,score=100)
 # print(json.dumps(d))
 
-import json
+# import json
 
-class Student(object):
-    def __init__(self, name, age, score):
-        self.name = name
-        self.age = age
-        self.score = score
-def dict2student(d):
-    return Student(d['name'], d['age'], d['score'])
-json_str = '{"age": 20, "score": 88, "name": "Bob"}'
-print(json.loads(json_str, object_hook=dict2student))
+# class Student(object):
+#     def __init__(self, name, age, score):
+#         self.name = name
+#         self.age = age
+#         self.score = score
+# def dict2student(d):
+#     return Student(d['name'], d['age'], d['score'])
+# json_str = '{"age": 20, "score": 88, "name": "Bob"}'
+# print(json.loads(json_str, object_hook=dict2student))
+
+# import os
+# print("Process %s  ..." % os.getppid())
+# pid = os.fork()
+# if pid == 0:
+#     print( " chile %s parent %s" % (os.getpid() , os.getppid()))
+# else:
+#     print(" i %s created a child %s", % (os.getpid() ,pid))
+
+# import re
+# s = "ABC\-001"
+# print(s)
+
+# from datetime import datetime
+# now = datetime.now()
+# print(now.timestamp())
+# t = 1420000
+# cday = datetime.strptime
+
+# from collections import namedtuple
+# Point = namedtuple("Point",["x","y"])
+# p=Point(1,2)
+# print(p.x)
+# print(p.y)
+
+# import base64
+# print(base64.b64encode(b'binarstring'))
+
+# import struct
+# s =struct.pack(">I",2111)
+# print(s)
+
+# import hashlib
+
+# md5 = hashlib.md5()
+# md5.update('caiyi666'.encode("utf-8"))
+# print(md5.hexdigest())
+
+# import hashlib
+
+# md5 = hashlib.md5()
+# md5.update('how to use md5 in '.encode('utf-8'))
+# md5.update('python hashlib?'.encode('utf-8'))
+# print(md5.hexdigest())
+
+# import itertools
+# n = itertools.cycle("abc")
+# for i in n :
+#     print(i)
+
+
+# from contextlib import contextmanager
+# class Query (object):
+
+#     def __init__(self,name):
+#         self.name = name 
+#     def query(self):
+#         print('query info %s' % self.name)
+
+# @contextmanager
+# def create_query(name):
+#     print("begin")
+#     q = Query(name)
+#     yield q 
+#     print("end")
+# with create_query('bob') as q:
+#     q.query()
+
+
+# from contextlib import contextmanager
+
+# @contextmanager
+# def tag(name):
+#     print("<%s>" %name)
+#     yield
+#     print("</%s>" % name)
+# with tag("h1"):
+#     print("hell world")
+
+# from contextlib import closing
+# from urllib.request import urlopen
+
+# with closing(urlopen('https://www.baidu.com')) as page:
+#     for line in page:
+#         print(line)
+
+from urllib import request
+
+with request.urlopen('https://www.baidu.com') as f:
+    # data = f.read()
+    print('Status:', f.status, f.reason)
+    for k, v in f.getheaders():
+        print('%s: %s' % (k, v))
+    # print('Data:', data.decode('utf-8'))
